@@ -10,9 +10,6 @@ class BusesController < ApplicationController
   end
 
   def predict
-    @bus = Bus.find(1)
-    respond_to do |format|
-      format.json { render json: @bus, success: true, status: :created }
-    end
+    @bus = Bus.find(params[:bus_id])
   end
 end

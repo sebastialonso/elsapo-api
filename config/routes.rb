@@ -8,7 +8,7 @@ ElsapoApi::Application.routes.draw do
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
   resources :buses, :only => [:index, :show] do
-    get '/buses/:bus_id/predict' => 'buses#predict'
+    get '/predict' => 'buses#predict', as: 'predict'
   end
   resources :sapeadas, :only => [:create]
   # Example of named route that can be invoked with purchase_url(id: product.id)
