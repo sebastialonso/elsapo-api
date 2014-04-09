@@ -4,6 +4,7 @@ class SapeadasController < ApplicationController
   def create
     respond_to do |format|
       format.json {
+        puts "INCOMIIIIIIIIIIIIIIIIING"
         @sapeada = Sapeada.new sapeada_params
         @sapeada.catch_time = date_to_seconds sapeada_params[:catch_time]
         if @sapeada.save
