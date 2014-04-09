@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  bus_id: 1
+  latitude: 9.99
+  longitude: 9.99
+  week_day: 1
+  catch_time: 1
+
+two:
+  bus_id: 1
+  latitude: 9.99
+  longitude: 9.99
+  week_day: 1
+  catch_time: 1
