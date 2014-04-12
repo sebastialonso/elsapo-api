@@ -10,7 +10,7 @@ ElsapoApi::Application.routes.draw do
   resources :buses, :only => [:index, :show] do
     get '/predict' => 'buses#predict', as: 'predict'
   end
-  resources :sapeadas, :only => [:create]
+  resources :sapeadas, :only => [:create, :index]
   # Example of named route that can be invoked with purchase_url(id: product.id)
   #   get 'products/:id/purchase' => 'catalog#purchase', as: :purchase
 
