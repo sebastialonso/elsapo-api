@@ -27,7 +27,7 @@ class SapeadasController < ApplicationController
     end
 
     def date_to_seconds(date)
-      date = date.to_datetime.in_time_zone
-      return date.hour*60*60 + date.min*60 + date.sec
+      date = date.to_datetime
+      date.hour*60*60 + date.min*60 + date.sec
     end
 end
