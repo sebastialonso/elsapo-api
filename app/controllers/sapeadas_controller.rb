@@ -12,6 +12,7 @@ class SapeadasController < ApplicationController
       @sapeada = Sapeada.new sapeada_params
       @sapeada.catch_time = date_to_seconds sapeada_params[:catch_time]
       if @sapeada.save
+        @sapeada.update_attributes(:saved_time => date_to_seconds(@sapeada.created_at))
         format.json { render 'success' }
         #render json: @sapeada, success: true, status: :created
       else
