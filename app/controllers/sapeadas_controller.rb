@@ -43,7 +43,7 @@ class SapeadasController < ApplicationController
     end
 
     def sapeada_params
-      params.require(:sapeada).permit(:bus_id, :latitude, :longitude, :week_day, :catch_time)
+      params.require(:sapeada).permit(:bus_id, :latitude, :longitude, :week_day, :catch_time, :direction)
     end
 
     def date_to_seconds(date)
