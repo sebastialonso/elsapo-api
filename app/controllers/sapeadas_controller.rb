@@ -4,7 +4,7 @@ class SapeadasController < ApplicationController
   after_filter :set_access_control_headers
 
   def index
-    @sapeadas = Sapeada.all  
+    @sapeadas = Sapeada.where(:bus_id => params[:bus_id])  
   end
 
   def options

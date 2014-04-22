@@ -2,7 +2,7 @@ class BusesController < ApplicationController
   respond_to :json
 
   def index
-    @buses = Bus.where(:bus_id => params[:bus_id])
+    @buses = Bus.all
   end
 
   def predict
