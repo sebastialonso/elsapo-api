@@ -38,6 +38,8 @@ group :development do
 end
 
 gem 'rabl'
+gem 'ai4r'
+#gem 'ostruct'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.1.2'
 
