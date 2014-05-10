@@ -1,5 +1,5 @@
 namespace :sapeadas do 
-  describe "Mueve sapeadas utiles de bus 1 a 4"
+  desc "Mueve sapeadas utiles de bus 1 a 4"
   task :assign_to_marcha_blanca => :production do
     saps = Sapeada.where(:week_day => 3, :bus_id => 1).not.where(:direction => nil)
     target = Bus.find 4
