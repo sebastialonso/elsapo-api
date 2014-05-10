@@ -1,7 +1,6 @@
-object @predict
 node(:latitude){ @predict[0] }
-# node(:longitude){ @predict[1] }
-# node(:catch_time){ @predict[2] }
+node(:longitude){ @predict[1] }
+node(:catch_time){ @predict[2] }
 # node(:bus_id) { @bus.id }
 # node(:latitude) { 
 #   if @bus.id == 3
