@@ -3,7 +3,7 @@ class Bus < ActiveRecord::Base
   serialize :centroids, Array 
   has_many :sapeadas
 
-  def self.build_clusters(bus_id, week_day)
+  def self.build_clusters(bus_id, week_day, k)
     sapeadas = Sapeada.where(:bus_id => bus_id, :week_day => week_day)
     saps_array = []
     sapeadas.each do |sap|
@@ -17,7 +17,7 @@ class Bus < ActiveRecord::Base
     data_set = Ai4r::Data::DataSet.new(:data_items => saps_array, :data_labels => data_labels)
     puts "Calculando clusters..."
     clusters = Ai4r::Clusterers::KMeans.new
-    clusters.build data_set, 2
+    clusters.build data_set, k
     puts "Hecho"
     bus = Bus.find(bus_id)
     bus.update_attributes(:centroids => clusters.centroids)
