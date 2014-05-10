@@ -11,7 +11,7 @@ namespace :sapeadas do
       s.catch_time = sap.catch_time
       s.week_day = sap.week_day
       s.direction = sap.direction
-      s.create!
+      s.save
     end
   end
 end
