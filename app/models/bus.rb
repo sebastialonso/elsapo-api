@@ -24,4 +24,19 @@ class Bus < ActiveRecord::Base
     puts "Clusters guardados"
   end
 
+  def find_best_clusters(lat,long, catch_time)
+    max = Float::INFINITY
+    sel_index = 0
+    centroids.each_with_index do |cluster, index|
+      if Bus.distance(cluster, [lat,long, catch_time]) < max
+        sel_index = index
+      end
+    end
+    centroids[sel_index]
+  end
+
+  def self.distance(cluster, data)
+    (cluster[0] - data[0].to_i)**2 + (cluster[1] - data[1].to_i)**2 + (cluster[2] - data[2].to_i)**2
+  end
+
 end

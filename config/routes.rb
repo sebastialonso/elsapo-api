@@ -9,6 +9,7 @@ ElsapoApi::Application.routes.draw do
   #   get 'products/:id' => 'catalog#view'
   resources :buses, :only => [:index, :show] do
     get '/predict' => 'buses#predict', as: 'predict'
+    get '/last' => 'buses#last', as: 'last'
     resources :sapeadas, :only => [:create, :index]
   end
   
