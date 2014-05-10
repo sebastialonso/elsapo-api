@@ -8,6 +8,11 @@ class BusesController < ApplicationController
   def predict
     bus = Bus.find(params[:bus_id])
     @predict = bus.find_best_clusters(params[:latitude], params[:longitude], params[:catch_time])
+    if @predict.size > 1
+      @predict.first
+    else
+      @predict
+    end
   end
 
   def last
