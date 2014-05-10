@@ -1,2 +1,2 @@
 object @sapeada
-attribute :latitude, :longitude, :catch_time
+attribute :latitude, :longitude, :catch_time, :useful
