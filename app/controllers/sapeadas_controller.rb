@@ -21,12 +21,21 @@ class SapeadasController < ApplicationController
       puts "INCOMIIIIIIIIIIIIIIIIING"
       @sapeada = Sapeada.new sapeada_params
       @sapeada.catch_time = date_to_seconds sapeada_params[:catch_time]
+      
+      #Guardamos si la sapeada está dentro del radio de algun paradero
+      bus = Bus.find(sapeada_params[:bus_id])
+      @sapeada.useful = false
+      bus.stops.each do |stop|
+        if (stop[0] - @sapeada.latitude)**2 + (stop[1] - @sapeada.longitude)**2 < 3e-6
+          @sapeada.useful = true    
+          break
+        end
+      end 
+      #Se guarda
       if @sapeada.save
         format.json { render 'success' }
-        #render json: @sapeada, success: true, status: :created
       else
         format.json { render 'error' }
-        #render json: resources.errors, status: :unprocessable_entity
       end
     end
   end

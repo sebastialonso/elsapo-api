@@ -1,6 +1,7 @@
 require 'ai4r'
 class Bus < ActiveRecord::Base
   serialize :centroids, Array 
+  serialize :stops, Array
   has_many :sapeadas
 
   def self.build_clusters(bus_id, week_day, k)
