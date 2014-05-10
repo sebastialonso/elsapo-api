@@ -26,7 +26,8 @@ class SapeadasController < ApplicationController
       bus = Bus.find(sapeada_params[:bus_id])
       @sapeada.useful = false
       bus.stops.each do |stop|
-        if (stop[0] - @sapeada.latitude)**2 + (stop[1] - @sapeada.longitude)**2 < 3e-6
+        if (stop[0] - @sapeada.latitude)**2 + (stop[1] - @sapeada.longitude)**2 < 3e-5
+          puts "ZONA de PARADERO"
           @sapeada.useful = true    
           break
         end

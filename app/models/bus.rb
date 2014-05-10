@@ -1,5 +1,6 @@
 require 'ai4r'
 class Bus < ActiveRecord::Base
+  @@radius = 3e-6
   serialize :centroids, Array 
   serialize :stops, Array
   has_many :sapeadas
