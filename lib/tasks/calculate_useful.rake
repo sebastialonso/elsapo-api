@@ -24,6 +24,8 @@ namespace :sapeadas do
         if Bus.geographic_distance([sap.latitude, sap.longitude], [stop.latitude, stop.longitude]) <= Bus::RADIUS
           sap.update_attributes(:useful => true)
           puts "Sapeada id #{sap.id} es util"
+        else
+          sap.update_attributes(:useful => false)
         end
       end
     end
