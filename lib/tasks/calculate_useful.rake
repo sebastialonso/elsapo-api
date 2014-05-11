@@ -17,7 +17,7 @@ namespace :sapeadas do
 
   desc "Selecciona sapeadas utiles"
   task :calculate_usefulness => :environment do
-    bus = Bus.includes(:sapedas).find 4
+    bus = Bus.includes(:sapeadas).find 4
     saps = bus.sapeadas
     saps.each do |sap|
       bus.stops.each do |stop|
