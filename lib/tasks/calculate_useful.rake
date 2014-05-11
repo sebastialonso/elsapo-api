@@ -14,4 +14,18 @@ namespace :sapeadas do
       s.save
     end
   end
+
+  desc "Selecciona sapeadas utiles"
+  task :calculate_usefulness => :environment do
+    bus = Bus.include(:sapedas).find 4
+    saps = bus.sapeadas
+    saps.each do |sap|
+      bus.stops.each do |stop|
+        if Bus.geographic_distance([sap.latitude, sap.longitude], [stop.latitude, stop.longitude]) <= Bus::RADIUS
+          sap.update_attributes(:useful => true)
+          puts "Sapeada id #{sap.id} es util"
+        end
+      end
+    end
+  end
 end

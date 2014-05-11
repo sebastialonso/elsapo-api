@@ -1,6 +1,6 @@
 require 'ai4r'
 class Bus < ActiveRecord::Base
-  @@radius = 3e-6
+  RADIUS = 3e-6
   serialize :centroids, Array 
   serialize :stops, Array
   has_many :sapeadas
@@ -35,6 +35,10 @@ class Bus < ActiveRecord::Base
       end
     end
     centroids[sel_index]
+  end
+
+  def self.geographic_distance(point_1, point_2)
+    (point_1[0] - point_2[0])**2 + (point_1[1] - point_2[1])**2 
   end
 
   def self.distance(cluster, data)
