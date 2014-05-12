@@ -5,6 +5,10 @@ class BusesController < ApplicationController
     @buses = Bus.all
   end
 
+  def show
+    @bus = Bus.find params[:id]
+  end
+
   def predict
     bus = Bus.find(params[:bus_id])
     @predict = bus.find_best_clusters(params[:latitude], params[:longitude], params[:catch_time])

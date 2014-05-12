@@ -1,2 +1,2 @@
 object @bus
-attributes :id, :line_number
+attributes :id, :line_number, :stops
