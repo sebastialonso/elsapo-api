@@ -19,11 +19,19 @@ namespace :sapeadas do
   task :calculate_usefulness => :environment do
     bus = Bus.includes(:sapeadas).find 4
     saps = bus.sapeadas
-    saps.each do |sap|
-      bus.stops.each do |stop|
+    #Si para algun paradero, la sapeada se encuentra en su radio, entonces nos sirve
+    saps.each_with_index do |sap, sap_index|
+      bus.stops.each_with_index do |stop, stop_index|
+        if sap_index == 4022
+          puts "distancia entre puntos: #{Bus.geographic_distance([sap.latitude, sap.longitude], stop)}"
+          puts "debe ser menor que: #{Bus::RADIUS}"
+          puts "#{Bus.geographic_distance([sap.latitude, sap.longitude], stop) <= Bus::RADIUS}"
+        end
         if Bus.geographic_distance([sap.latitude, sap.longitude], stop) <= Bus::RADIUS
           sap.update_attributes(:useful => true)
-          puts "Sapeada id #{sap.id} es util"
+          if sap_index == 4022
+            puts "es util la sapeada 4022: #{sap.useful}"
+          end
         else
           sap.update_attributes(:useful => false)
         end
