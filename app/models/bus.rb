@@ -2,8 +2,9 @@ require 'ai4r'
 class Bus < ActiveRecord::Base
   RADIUS = 1.9e-6
   serialize :centroids, Array 
-  serialize :stops, Array
+  serialize :paradas, Array
   has_many :sapeadas
+  has_and_belongs_to_many :stops
 
   def self.build_clusters(bus_id, week_day, direction, k)
     sapeadas = Sapeada.where(:bus_id => bus_id, :week_day => week_day, :useful => true, :direction => direction)
