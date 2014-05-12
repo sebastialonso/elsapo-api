@@ -37,13 +37,13 @@ class BusesController < ApplicationController
   end
 
   private
-    # def set_access_control_headers
-    #   headers['Access-Control-Allow-Origin'] = "*"
-    #   headers['Access-Control-Request-Methods'] = 'POST, GET, OPTIONS'
-    # end
+    def set_access_control_headers
+      headers['Access-Control-Allow-Origin'] = "*"
+      headers['Access-Control-Request-Methods'] = 'POST, GET, OPTIONS'
+    end
 
-    # def access_allowed?
-    #   allowed_sites = [request.env['HTTP_ORIGIN']]
-    #   return allowed_sites.include?(request.env['HTTP_ORIGIN'])
-    # end
+    def access_allowed?
+      allowed_sites = [request.env['HTTP_ORIGIN']]
+      return allowed_sites.include?(request.env['HTTP_ORIGIN'])
+    end
 end
