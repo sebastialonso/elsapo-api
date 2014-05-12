@@ -3,19 +3,19 @@ class SapeadasController < ApplicationController
   respond_to :json
   after_filter :set_access_control_headers
 
+  # def options
+  #   if access_allowed?
+  #     set_access_control_headers
+  #     head :ok
+  #   else
+  #     head :forbidden
+  #   end
+  # end
+
   def index
     @sapeadas = Sapeada.where(:bus_id => params[:bus_id])
   end
 
-  def options
-    if access_allowed?
-      set_access_control_headers
-      head :ok
-    else
-      head :forbidden
-    end
-  end
-  
   def create
     respond_to do |format|
       puts "INCOMIIIIIIIIIIIIIIIIING"
