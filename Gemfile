@@ -39,6 +39,7 @@ end
 
 gem 'rabl'
 gem 'ai4r'
+gem 'whenever', :require => false
 #gem 'ostruct'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.1.2'

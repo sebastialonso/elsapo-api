@@ -27,7 +27,7 @@ class Bus < ActiveRecord::Base
     puts "Clusters guardados"
   end
 
-  def find_best_clusters(lat,long, catch_time)
+  def find_best_clusters(lat,long, catch_time, direction, week_day)
     max = Float::INFINITY
     sel_index = 0
     centroids.each_with_index do |cluster, index|
