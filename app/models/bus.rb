@@ -6,8 +6,8 @@ class Bus < ActiveRecord::Base
   has_many :sapeadas
   has_and_belongs_to_many :stops
 
-  def self.build_clusters(bus_id, week_day, direction, k)
-    sapeadas = Sapeada.where(:bus_id => bus_id, :week_day => week_day, :useful => true, :direction => direction)
+  def self.build_clusters(bus_id, week_day, k)
+    sapeadas = Sapeada.where(:bus_id => bus_id, :week_day => week_day, :useful => true)
     saps_array = []
     sapeadas.each do |sap|
       new_data = []
