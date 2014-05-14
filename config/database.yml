@@ -24,8 +24,8 @@ development:
 
 production:
   adapter: postgresql
-  database: db/sapo_production
+  database: sapo_production
   pool: 5
-  username: elsapo
+  username: sapo
   password:
   host: localhost
