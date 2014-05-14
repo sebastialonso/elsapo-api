@@ -27,5 +27,5 @@ production:
   database: sapo_production
   pool: 5
   username: sapo
-  password:
+  password: 
   host: localhost
