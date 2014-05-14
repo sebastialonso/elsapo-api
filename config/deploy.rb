@@ -6,7 +6,7 @@ set :application, 'elsapo-api'
 # Default value for :scm is :git
 set :scm, :git
 set :repo_url, 'git@example.com:sebastialonso/elsapo-api.git'
-
+set :user, 'deploy'
 # Default branch is :master
 # ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }.call
 
