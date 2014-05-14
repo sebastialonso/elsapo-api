@@ -37,6 +37,9 @@ group :development do
   gem 'pry-rails'
 end
 
+group :production do
+  gem 'mysql2'
+end
 gem 'rabl'
 gem 'ai4r'
 gem 'whenever', :require => false
