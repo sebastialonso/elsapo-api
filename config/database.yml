@@ -22,9 +22,10 @@ development:
 #   username: elsapo
 #   password:
 
-# production:
-#   adapter: postgresql
-#   database: db/sapo_production
-#   pool: 5
-#   username: elsapo
-#   password:
+production:
+  adapter: postgresql
+  database: db/sapo_production
+  pool: 5
+  username: elsapo
+  password:
+  host: localhost
