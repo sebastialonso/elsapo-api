@@ -35,7 +35,6 @@ set :linked_files, %w{config/database.yml}
 
 # Default value for keep_releases is 5
 # set :keep_releases, 5
-
 namespace :deploy do
 
   desc 'Restart application'
@@ -55,6 +54,12 @@ namespace :deploy do
       #   execute :rake, 'cache:clear'
       # end
     end
+  end
+  
+  after 'deploy:update_code', 'deploy:symlink_db'
+  desc "Symlinks the database.yml"
+  task :symlink_db, :roles => :app do
+    run "ln -nfs #{deploy_to}/shared/config/database.yml #{release_path}/config/database.yml"
   end
 
 end
