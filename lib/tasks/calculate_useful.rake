@@ -59,15 +59,16 @@ namespace :sapeadas do
     filename = Rails.root.join("sapeadas.csv")
     CSV.foreach(filename) do |row|
       sap = Sapeada.new(
+        :bus_id => 1
         :latitude => row[2],
         :longitude => row[3],
-        :week_day => row[4],
+        :week_day => 3,
         :catch_time => row[5],
         :direction => row[8],
         :useful => row[9]
         )
       sap.save
     end
-    puts "Sapeadas importadas"
+    puts "Sapeadas importadas desde #{filename}"
   end
 end
