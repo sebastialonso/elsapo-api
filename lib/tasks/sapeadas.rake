@@ -37,7 +37,7 @@ namespace :sapeadas do
   desc "Copia las sapeadas de un día a otro dia"
   task :multiplicar_en_dias => :environment do
     days = [0,1,2,4,5,6]
-    sapeadas = Sapeada.where(:bus_id => 4, :week_day => 3)
+    sapeadas = Sapeada.where(:bus_id => 1, :week_day => 3)
     days.each do |week_day|
       sapeadas.each do |sap|
         new_sap = Sapeada.new
