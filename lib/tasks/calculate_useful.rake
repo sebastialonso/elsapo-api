@@ -59,7 +59,7 @@ namespace :sapeadas do
     filename = Rails.root.join("sapeadas.csv")
     CSV.foreach(filename) do |row|
       sap = Sapeada.new(
-        :bus_id => 1
+        :bus_id => 1,
         :latitude => row[2],
         :longitude => row[3],
         :week_day => 3,
