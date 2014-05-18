@@ -31,7 +31,8 @@ class SapeadasController < ApplicationController
           @sapeada.useful = true    
           break
         end
-      end 
+      end
+      @sapeada.seed = false 
       #Se guarda
       if @sapeada.save
         format.json { render 'success' }
@@ -39,6 +40,11 @@ class SapeadasController < ApplicationController
         format.json { render 'error' }
       end
     end
+  end
+
+  def useful
+    bus = Bus.find(params[:bus_id])
+    @sapeadas = Sapeada.where(:useful => true, :bus_id => bus.idq)
   end
 
   private
