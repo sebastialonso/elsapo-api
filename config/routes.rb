@@ -11,7 +11,9 @@ ElsapoApi::Application.routes.draw do
     get '/predict' => 'buses#predict', as: 'predict'
     get '/last' => 'buses#last', as: 'last'
     resources :sapeadas, :only => [:create, :index] do
-      get '/useful' => 'sapeadas#useful', as: 'useful'
+      collection do
+        get '/useful' => 'sapeadas#useful', as: 'useful'
+      end
     end
   end
   
