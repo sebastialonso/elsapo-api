@@ -44,7 +44,7 @@ class SapeadasController < ApplicationController
 
   def useful
     bus = Bus.find(params[:bus_id])
-    @sapeadas = Sapeada.where(:useful => true, :bus_id => bus.idq)
+    @sapeadas = Sapeada.where(:useful => true, :bus_id => bus.id)
   end
 
   private
