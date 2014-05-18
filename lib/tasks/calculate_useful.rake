@@ -60,8 +60,8 @@ namespace :sapeadas do
     CSV.foreach(filename) do |row|
       sap = Sapeada.new(
         :bus_id => 1,
-        :latitude => row[2],
-        :longitude => row[3],
+        :latitude => row[2].to_d,
+        :longitude => row[3].to_d,
         :week_day => 3,
         :catch_time => row[5],
         :direction => row[8],
