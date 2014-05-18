@@ -52,4 +52,22 @@ namespace :sapeadas do
       puts "day #{week_day} done"
     end
   end
+
+  require 'csv'
+  desc "Copia sapeadas desde archivo CSV"
+  task :from_csv => :environment do
+    filename = Rails.root.join("sapeadas.csv")
+    CSV.foreach(filename) do |row|
+      sap = Sapeada.new(
+        :latitude => row[2],
+        :longitude => row[3],
+        :week_day => row[4],
+        :catch_time => row[5],
+        :direction => row[8],
+        :useful => row[9]
+        )
+      sap.save
+    end
+    puts "Sapeadas importadas"
+  end
 end
