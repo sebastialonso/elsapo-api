@@ -27,6 +27,11 @@ GEM
       tzinfo (~> 0.3.37)
     ai4r (1.13)
     arel (4.0.2)
+    better_errors (1.1.0)
+      coderay (>= 1.0.0)
+      erubis (>= 2.6.6)
+    binding_of_caller (0.7.2)
+      debug_inspector (>= 0.0.1)
     builder (3.1.4)
     capistrano (3.2.1)
       i18n
@@ -41,6 +46,7 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.7.0)
+    debug_inspector (0.0.2)
     erubis (2.7.0)
     execjs (2.0.2)
     hike (1.2.3)
@@ -146,6 +152,8 @@ PLATFORMS
 
 DEPENDENCIES
   ai4r
+  better_errors
+  binding_of_caller
   capistrano
   coffee-rails (~> 4.0.0)
   jbuilder (~> 1.2)
