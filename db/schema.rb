@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140519003234) do
+ActiveRecord::Schema.define(version: 20140519012621) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -20,12 +20,21 @@ ActiveRecord::Schema.define(version: 20140519003234) do
     t.string   "line_number"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.text     "centroids"
   end
 
   create_table "buses_stops", id: false, force: true do |t|
     t.integer "bus_id"
     t.integer "stop_id"
+  end
+
+  create_table "centroids", force: true do |t|
+    t.decimal  "latitude",   precision: 10, scale: 8
+    t.decimal  "longitude",  precision: 10, scale: 8
+    t.integer  "catch_time"
+    t.integer  "bus_id"
+    t.boolean  "direction"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "sapeadas", force: true do |t|

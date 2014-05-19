@@ -71,4 +71,9 @@ namespace :sapeadas do
     end
     puts "Sapeadas importadas desde #{filename}"
   end
+
+  desc "Multiplicar cada 20 minutos"
+  task :new_every_20_minutes => :environment do
+    
+  end
 end

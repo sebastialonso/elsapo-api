@@ -1,13 +1,13 @@
 require 'ai4r'
 class Bus < ActiveRecord::Base
   RADIUS = 1.9e-6
-  serialize :centroids, Array 
-  serialize :paradas, Array
   has_many :sapeadas
   has_and_belongs_to_many :stops
+  has_many :left_centroids, class_name: "Centroid"
+  has_many :right_centroids, class_name: "Centroid"
 
-  def self.build_clusters(bus_id, week_day, k)
-    sapeadas = Sapeada.where(:bus_id => bus_id, :week_day => week_day, :useful => true)
+  def self.build_clusters(bus_id, week_day, k, direction)
+    sapeadas = Sapeada.where(:bus_id => bus_id, :week_day => week_day, :useful => true, :direction => direction)
     saps_array = []
     sapeadas.each do |sap|
       new_data = []
@@ -18,13 +18,34 @@ class Bus < ActiveRecord::Base
     end
     data_labels = ['latitude', 'longitude', 'catch_time']
     data_set = Ai4r::Data::DataSet.new(:data_items => saps_array, :data_labels => data_labels)
-    puts "Calculando clusters..."
+    puts "Calculando..."
     clusters = Ai4r::Clusterers::KMeans.new
     clusters.build data_set, k
     puts "Hecho"
+    puts "Creando clusters..."
+    centroids_to_add_to_bus = Centroid.limit 0
+    clusters.centroids.each do |centroid|
+      cent = Centroid.create(
+        :latitude => centroid[0].to_d,
+        :longitude => centroid[1].to_d,
+        :catch_time => centroid[2],
+        :direction => direction,
+        :bus_id => bus_id
+        )
+      centroids_to_add_to_bus.append cent
+    end
     bus = Bus.find(bus_id)
-    bus.update_attributes(:centroids => clusters.centroids)
-    puts "Clusters guardados"
+    if direction #true -> vina -> clusters derechos
+      bus.right_centroids = centroids_to_add_to_bus
+    else
+      bus.left_centroids = centroids_to_add_to_bus
+    end
+    if direction
+      direction = "derechos"
+    else
+      direction = "izquierdos"
+    end
+    puts "Clusters #{direction} guardados"
   end
 
   def find_best_clusters(lat,long, catch_time, direction, week_day)
