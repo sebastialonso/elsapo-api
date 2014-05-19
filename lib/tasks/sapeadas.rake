@@ -19,7 +19,7 @@ namespace :sapeadas do
   task :calculate_usefulness => :environment do
     logger = Logger.new "sapeada_usefulness.log"
     logger.info Time.now.in_time_zone
-    bus = Bus.includes(:sapeadas).find 4
+    bus = Bus.includes(:sapeadas).find 1
     saps = bus.sapeadas
     #Si para algun paradero, la sapeada se encuentra en su radio, entonces nos sirve
     saps.each_with_index do |sap, sap_index|
