@@ -36,18 +36,18 @@ class Bus < ActiveRecord::Base
     end
     bus = Bus.find(bus_id)
     if direction #true -> vina -> clusters derechos
-      bus.right_centroids = centroids_to_add_to_bus
+      bus.update_attributes(:right_centroids => centroids_to_add_to_bus)
       puts "derechos"
     else
-      bus.left_centroids = centroids_to_add_to_bus
+      bus.update_attributes(:left_centroids => centroids_to_add_to_bus)
       puts "izquierdos"
     end
     if direction
-      direction = "derechos"
+      direction_st = "derechos"
     else
-      direction = "izquierdos"
+      direction_st = "izquierdos"
     end
-    puts "Clusters #{direction} guardados"
+    puts "Clusters #{direction_st} guardados"
   end
 
   def find_best_clusters(lat,long, catch_time, direction, week_day)
