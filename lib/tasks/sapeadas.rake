@@ -25,7 +25,7 @@ namespace :sapeadas do
     saps.each_with_index do |sap, sap_index|
       bus.stops.each_with_index do |stop, stop_index|
         if not sap.useful
-          if Bus.geographic_distance([sap.latitude.to_f, sap.longitude.to_f], stop) <= Bus::RADIUS
+          if Bus.geographic_distance([sap.latitude.to_f, sap.longitude.to_f], [stop.latitude, stop.longitude]) <= Bus::RADIUS
             sap.update_attributes(:useful => true)
             logger.info "Yay, sapeada #{sap.id} es util"
           end
