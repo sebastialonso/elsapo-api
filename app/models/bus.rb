@@ -16,8 +16,8 @@ class Bus < ActiveRecord::Base
   def self.build_all_clusters(bus_id, week_day)
     bus = Bus.find 1
     bus.centroids.delete_all
-    Bus.build_clusters(bus_id,week_day, bus.stops.where(:direction => false).size, false)
-    Bus.build_clusters(bus_id,week_day, bus.stops.where(:direction => true).size, true)
+    Bus.build_clusters(bus_id,week_day, bus.stops.where(:direction => false).size * 50, false)
+    Bus.build_clusters(bus_id,week_day, bus.stops.where(:direction => true).size * 50, true)
   end
 
   def self.build_clusters(bus_id, week_day, k, direction)

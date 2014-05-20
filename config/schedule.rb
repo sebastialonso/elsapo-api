@@ -15,10 +15,7 @@
 #
 every 1.days, :at => "11:15 pm" do
   d= Time.now.in_time_zone.wday
-  b = Bus.find(4)
   #tanto clusters como paraderos en direccion false
-  k = b.stops.where(:direction => false).size
-  runner "Bus.build_clusters(4,#{d}, #{false}, #{k})"
+  runner "Bus.build_all_clusters(1,#{d})"
 end
-
 # Learn more: http://github.com/javan/whenever
