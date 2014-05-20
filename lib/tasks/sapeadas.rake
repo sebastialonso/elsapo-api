@@ -47,6 +47,7 @@ namespace :sapeadas do
         new_sap.useful = sap.useful
         new_sap.catch_time = sap.catch_time
         new_sap.week_day = week_day
+        new_sap.seed = true
         new_sap.save
       end
       puts "day #{week_day} done"
