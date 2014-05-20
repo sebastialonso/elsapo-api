@@ -1,6 +1,15 @@
 object @bus
 attributes :id, :line_number
-child :left_centroids { attributes :latitude, :longitude, :catch_time }
+node do |bus|
+  { :left_centroids => bus.centroids.where(:direction => false) }
+end
+node do |bus|
+  { :right_centroids => bus.centroids.where(:direction => true) }
+end
+# collection :left_centroids do |u|
+#   { attributes :latitude, :longitude, :catch_time }
+# end
+
 # node :right_centroids do |bus|
 #   bus.right_centroids
 # end
