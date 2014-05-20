@@ -24,7 +24,7 @@ namespace :sapeadas do
     #Si para algun paradero, la sapeada se encuentra en su radio, entonces nos sirve
     saps.each_with_index do |sap, sap_index|
       bus.stops.each_with_index do |stop, stop_index|
-        if not sap.useful
+        if sap.useful.nil? or not sap.useful
           if sap.direction == stop.direction and Bus.geographic_distance([sap.latitude.to_f, sap.longitude.to_f], [stop.latitude, stop.longitude]) <= Bus::RADIUS
             sap.update_attributes(:useful => true)
             logger.info "Yay, sapeada #{sap.id} es util"
@@ -65,8 +65,7 @@ namespace :sapeadas do
         :longitude => row[3].to_d,
         :week_day => 3,
         :catch_time => row[5],
-        :direction => row[8],
-        :useful => row[9]
+        :direction => row[8]
         )
       sap.save
     end
