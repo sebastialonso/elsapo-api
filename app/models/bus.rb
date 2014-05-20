@@ -3,8 +3,8 @@ class Bus < ActiveRecord::Base
   RADIUS = 1.9e-6
   has_many :sapeadas
   has_and_belongs_to_many :stops
-  has_many :left_centroids, class_name: "Centroid"
-  has_many :right_centroids, class_name: "Centroid"
+  has_many :left_centroids, class_name: "Centroid", foreign_key: 'bus_id', -> { where direction: false }
+  has_many :right_centroids, class_name: "Centroid", foreign_key: 'bus_id', -> { where direction: true }
 
   def self.build_clusters(bus_id, week_day, k, direction)
     sapeadas = Sapeada.where(:bus_id => bus_id, :week_day => week_day, :useful => true, :direction => direction)
