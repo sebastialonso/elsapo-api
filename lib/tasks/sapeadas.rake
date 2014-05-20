@@ -73,7 +73,11 @@ namespace :sapeadas do
   end
 
   desc "Multiplicar cada 20 minutos"
-  task :new_every_20_minutes => :environment do
+  task :new__usefl_every_20_minutes => :environment do
     delta = 20*60
+    days = [0,1,2,3,4,5,6]
+    days.each.do |day|
+      saps = Sapeada.where(:useful => true, :week_day => day)
+    end
   end
 end

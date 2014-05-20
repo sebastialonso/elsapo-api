@@ -47,6 +47,10 @@ class SapeadasController < ApplicationController
     @sapeadas = Sapeada.where(:useful => true, :bus_id => bus.id)
   end
 
+  def useful_per_day
+    @sapeadas = Sapeada.where(:useful => true, :bus_id => params[:bus_id], :week_day => params[:week_day])
+  end
+
   private
     def set_access_control_headers
       headers['Access-Control-Allow-Origin'] = "*"

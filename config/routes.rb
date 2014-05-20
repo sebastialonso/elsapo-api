@@ -13,6 +13,7 @@ ElsapoApi::Application.routes.draw do
     resources :sapeadas, :only => [:create, :index] do
       collection do
         get '/useful' => 'sapeadas#useful', as: 'useful'
+        get '/useful_per_day/:week_day' => 'sapeadas#useful_per_day', as: 'useful_per_day'
       end
     end
   end
