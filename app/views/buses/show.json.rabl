@@ -1,10 +1,10 @@
 object @bus
 attributes :id, :line_number
-child :left_centroids => :left_centroids do
-  attributes :latitude, :longitude, :catch_time, :direction
+node  do |bus|
+  { :left_centroids => bus.centroids.where(:direction => false)}
 end
-child :right_centroids => :right_centroids do
-  attributes :latitude, :longitude, :catch_time, :direction
+node  do |bus|
+  { :right_centroids => bus.centroids.where(:direction => true)}
 end
 child(:stops){ attributes :latitude, :longitude, :direction}
 # node :left_centroids do |bus|
