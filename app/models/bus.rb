@@ -54,6 +54,7 @@ class Bus < ActiveRecord::Base
     end
   end
 
+  #Modify this to work for every day, every direction
   def find_best_clusters(lat,long, catch_time, direction, week_day)
     max = Float::INFINITY
     sel_index = 0

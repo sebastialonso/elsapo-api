@@ -74,6 +74,6 @@ namespace :sapeadas do
 
   desc "Multiplicar cada 20 minutos"
   task :new_every_20_minutes => :environment do
-    
+    delta = 20*60
   end
 end
