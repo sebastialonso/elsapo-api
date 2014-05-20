@@ -3,8 +3,14 @@ class Bus < ActiveRecord::Base
   RADIUS = 1.9e-6
   has_many :sapeadas
   has_and_belongs_to_many :stops
-  has_many :left_centroids, class_name: "Centroid", lambda -> { where :direction => false }
-  has_many :right_centroids, class_name: "Centroid",  lambda -> { where :direction => true }
+  has_many :centroids
+
+  def build_all_clusters(bus_id, week_day)
+    bus = Bus.find 1
+    bus.centroids.delete_all
+    Model.build_clusters(bus_id,week_day, bus.stops.where(:direction => false).size, false)
+    Model.build_clusters(bus_id,week_day, bus.stops.where(:direction => true).size, true)
+  end
 
   def self.build_clusters(bus_id, week_day, k, direction)
     sapeadas = Sapeada.where(:bus_id => bus_id, :week_day => week_day, :useful => true, :direction => direction)
@@ -35,19 +41,9 @@ class Bus < ActiveRecord::Base
       centroids_to_add_to_bus.append cent
     end
     bus = Bus.find(bus_id)
-    if direction #true -> vina -> clusters derechos
-      bus.update_attributes(:right_centroids => centroids_to_add_to_bus)
-      puts "derechos"
-    else
-      bus.update_attributes(:left_centroids => centroids_to_add_to_bus)
-      puts "izquierdos"
+    centroids_to_add_to_bus.each do |centroid|
+      bus.centroids << centroid
     end
-    if direction
-      direction_st = "derechos"
-    else
-      direction_st = "izquierdos"
-    end
-    puts "Clusters #{direction_st} guardados"
   end
 
   def find_best_clusters(lat,long, catch_time, direction, week_day)
