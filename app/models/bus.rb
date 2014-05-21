@@ -58,8 +58,8 @@ class Bus < ActiveRecord::Base
   def find_best_clusters(lat,long, catch_time, direction, week_day)
     max = Float::INFINITY
     sel_index = 0
-    centroids.each_with_index do |cluster, index|
-      if Bus.distance(cluster, [lat,long, catch_time]) < max
+    centroids.where(:direction => direction).each_with_index do |cluster, index|
+      if Bus.distance([cluster.latitude, cluster.longitude, cluster.catch_time], [lat,long, catch_time]) < max
         sel_index = index
       end
     end
