@@ -1,6 +1,13 @@
-node(:latitude){ @predict[0] }
-node(:longitude){ @predict[1] }
-node(:catch_time){ @predict[2] }
+object false
+node(:latitude) { |m| @predict.latitude }
+node(:longitude) { |m| @predict.longitude }
+node(:catch_time) { |m| @predict.catch_time }
+#attributes {:latitude, :longitude, :catch_time}
+# node :latitude do |prediction|
+#   prediction.latitude
+# end
+# node(:longitude){ @predict[1] }
+# node(:catch_time){ @predict[2] }
 # node(:bus_id) { @bus.id }
 # node(:latitude) { 
 #   if @bus.id == 3

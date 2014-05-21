@@ -15,10 +15,9 @@ class Bus < ActiveRecord::Base
 
   def self.build_all_clusters(bus_id, week_day)
     bus = Bus.find 1
-    bus.centroids.delete_all
     Bus.build_clusters(bus_id,week_day, bus.stops.where(:direction => false).size * 50, false)
     Bus.build_clusters(bus_id,week_day, bus.stops.where(:direction => true).size * 50, true)
-  end
+  endf
 
   def self.build_clusters(bus_id, week_day, k, direction)
     sapeadas = Sapeada.where(:bus_id => bus_id, :week_day => week_day, :useful => true, :direction => direction)
@@ -49,6 +48,7 @@ class Bus < ActiveRecord::Base
       centroids_to_add_to_bus.append cent
     end
     bus = Bus.find(bus_id)
+    bus.centroids.delete_all
     centroids_to_add_to_bus.each do |centroid|
       bus.centroids << centroid
     end
@@ -56,10 +56,11 @@ class Bus < ActiveRecord::Base
 
   #Modify this to work for every day, every direction
   def find_best_clusters(lat,long, catch_time, direction, week_day)
-    max = Float::INFINITY
+    #max = Float::INFINITY
+    max = BigDecimal::INFINITY
     sel_index = 0
     centroids.where(:direction => direction).each_with_index do |cluster, index|
-      if Bus.distance([cluster.latitude, cluster.longitude, cluster.catch_time], [lat,long, catch_time]) < max
+      if Bus.distance([cluster.latitude, cluster.longitude, cluster.catch_time], [lat,long, catch_time.to_i]) < max
         sel_index = index
       end
     end
