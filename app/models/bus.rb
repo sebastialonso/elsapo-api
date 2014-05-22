@@ -17,7 +17,7 @@ class Bus < ActiveRecord::Base
     bus = Bus.find 1
     Bus.build_clusters(bus_id,week_day, bus.stops.where(:direction => false).size * 50, false)
     Bus.build_clusters(bus_id,week_day, bus.stops.where(:direction => true).size * 50, true)
-  endf
+  end
 
   def self.build_clusters(bus_id, week_day, k, direction)
     sapeadas = Sapeada.where(:bus_id => bus_id, :week_day => week_day, :useful => true, :direction => direction)
@@ -74,5 +74,4 @@ class Bus < ActiveRecord::Base
   def self.distance(cluster, data)
     (cluster[0] - data[0].to_i)**2 + (cluster[1] - data[1].to_i)**2 + (cluster[2] - data[2].to_i)**2
   end
-
 end

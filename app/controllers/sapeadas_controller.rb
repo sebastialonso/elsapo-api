@@ -28,7 +28,8 @@ class SapeadasController < ApplicationController
       bus.stops.each do |stop|
         if Bus.geographic_distance([@sapeada.latitude, @sapeada.longitude], [stop.latitude, stop.longitude]) <= Bus::RADIUS
           puts "ZONA de PARADERO"
-          @sapeada.useful = true    
+          @sapeada.useful = true  
+          stop.sapeadas << @sapeada  
           break
         end
       end
