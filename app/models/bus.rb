@@ -47,7 +47,7 @@ class Bus < ActiveRecord::Base
     clusters.build data_set, k
     #puts "Hecho"
     #puts "Creando clusters..."
-    centroids_to_add_to_bus = Centroid.limit 0
+    #centroids_to_add_to_bus = Centroid.limit 0
     #Es crucial borrar los centroides anteriores antes de reemplazarlos
     bus.centroids.clear
     clusters.centroids.each do |centroid|
@@ -59,7 +59,7 @@ class Bus < ActiveRecord::Base
         :bus_id => bus.id
         )
       #centroids_to_add_to_bus.append cent
-      bus.centroids << centroid
+      bus.centroids << cent
     end
     puts "Resultado parcial para paradero #{stop_to_predict.id}:  #{Time.now - start}"
   end
