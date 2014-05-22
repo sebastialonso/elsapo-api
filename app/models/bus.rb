@@ -14,13 +14,23 @@ class Bus < ActiveRecord::Base
   end
 
   def self.build_all_clusters(bus_id, week_day)
-    bus = Bus.find 1
-    Bus.build_clusters(bus_id,week_day, bus.stops.where(:direction => false).size * 50, false)
-    Bus.build_clusters(bus_id,week_day, bus.stops.where(:direction => true).size * 50, true)
+    start = Time.now
+    if week_day == 3
+      bus = Bus.find 1
+      bus.stops.find_each do |stop|
+        Bus.build_clusters(stop, week_day, bus_id)
+        # Bus.build_clusters(bus_id,week_day, bus.stops.where(:direction => true).size * 50, true)  
+      end 
+    else
+      puts "Solo trabajo para week_day == 3"
+    end
+    puts "Resultado total: #{Time.now - start}"
   end
 
-  def self.build_clusters(bus_id, week_day, k, direction)
-    sapeadas = Sapeada.where(:bus_id => bus_id, :week_day => week_day, :useful => true, :direction => direction)
+  def self.build_clusters(stop_to_predict, week_day, bus_id)
+    start = Time.now
+    sapeadas = Sapeada.where(:bus_id => bus_id, :week_day => week_day, :useful => true, :direction => stop_to_predict.direction, :stop_id => stop_id)
+    k = 1
     saps_array = []
     sapeadas.each do |sap|
       new_data = []
@@ -42,16 +52,18 @@ class Bus < ActiveRecord::Base
         :latitude => centroid[0].to_d,
         :longitude => centroid[1].to_d,
         :catch_time => centroid[2],
-        :direction => direction,
+        :direction => stop_to_predict.direction,
         :bus_id => bus_id
         )
       centroids_to_add_to_bus.append cent
     end
     bus = Bus.find(bus_id)
-    bus.centroids.delete_all
+    #Es crucial borrar los centroides anteriores antes de reemplazarlos
+    bus.centroids.clear
     centroids_to_add_to_bus.each do |centroid|
       bus.centroids << centroid
     end
+    puts "Resultado parcial para paradero #{stop_to_predict.id}:  #{Time.now - start}"
   end
 
   #Modify this to work for every day, every direction
