@@ -16,7 +16,7 @@ class Bus < ActiveRecord::Base
   def self.build_all_clusters(bus_id, week_day)
     start = Time.now
     if week_day == 3
-      bus = Bus.find 1
+      bus = Bus.find bus_id
       bus.stops.find_each do |stop|
         Bus.build_clusters(stop, week_day, bus_id)
         # Bus.build_clusters(bus_id,week_day, bus.stops.where(:direction => true).size * 50, true)  
@@ -29,7 +29,8 @@ class Bus < ActiveRecord::Base
 
   def self.build_clusters(stop_to_predict, week_day, bus_id)
     start = Time.now
-    sapeadas = Sapeada.where(:bus_id => bus_id, :week_day => week_day, :useful => true, :direction => stop_to_predict.direction, :stop_id => stop_id)
+    bus = Bus.find(bus_id)
+    sapeadas = Sapeada.where(:bus_id => bus_id, :week_day => week_day, :useful => true, :direction => stop_to_predict.direction, :stop_id => stop_to_predict.id)
     k = 1
     saps_array = []
     sapeadas.each do |sap|
@@ -41,26 +42,23 @@ class Bus < ActiveRecord::Base
     end
     data_labels = ['latitude', 'longitude', 'catch_time']
     data_set = Ai4r::Data::DataSet.new(:data_items => saps_array, :data_labels => data_labels)
-    puts "Calculando..."
+    puts "Calculando... con #{data_set.size} sapeadas y con k=#{k}"
     clusters = Ai4r::Clusterers::KMeans.new
     clusters.build data_set, k
-    puts "Hecho"
-    puts "Creando clusters..."
+    #puts "Hecho"
+    #puts "Creando clusters..."
     centroids_to_add_to_bus = Centroid.limit 0
+    #Es crucial borrar los centroides anteriores antes de reemplazarlos
+    bus.centroids.clear
     clusters.centroids.each do |centroid|
-      cent = Centroid.create(
+      cent = Centroid.new(
         :latitude => centroid[0].to_d,
         :longitude => centroid[1].to_d,
         :catch_time => centroid[2],
         :direction => stop_to_predict.direction,
-        :bus_id => bus_id
+        :bus_id => bus.id
         )
-      centroids_to_add_to_bus.append cent
-    end
-    bus = Bus.find(bus_id)
-    #Es crucial borrar los centroides anteriores antes de reemplazarlos
-    bus.centroids.clear
-    centroids_to_add_to_bus.each do |centroid|
+      #centroids_to_add_to_bus.append cent
       bus.centroids << centroid
     end
     puts "Resultado parcial para paradero #{stop_to_predict.id}:  #{Time.now - start}"
