@@ -26,7 +26,7 @@ namespace :sapeadas do
       bus.stops.each_with_index do |stop, stop_index|
         if sap.useful.nil? or not sap.useful
           if sap.direction == stop.direction and Bus.geographic_distance([sap.latitude.to_f, sap.longitude.to_f], [stop.latitude, stop.longitude]) <= Bus::RADIUS
-            sap.update_attributes(:useful => true)
+            sap.update_attributes(:useful => true, :stop_id => sap.id)
             stop.sapeadas << sap
             logger.info "Yay, sapeada #{sap.id} es util"
           end
@@ -43,6 +43,7 @@ namespace :sapeadas do
       sapeadas.each do |sap|
         new_sap = Sapeada.new
         new_sap.bus_id = sap.bus_id
+        new_sap.stop_id = sap.stop_id
         new_sap.latitude = sap.latitude
         new_sap.longitude = sap.longitude
         new_sap.useful = sap.useful

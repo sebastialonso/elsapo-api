@@ -17,6 +17,8 @@ class Bus < ActiveRecord::Base
     start = Time.now
     if week_day == 3
       bus = Bus.find bus_id
+      #Es crucial borrar los centroides anteriores antes de reemplazarlos
+      bus.centroids.clear
       bus.stops.find_each do |stop|
         Bus.build_clusters(stop, week_day, bus_id)
         # Bus.build_clusters(bus_id,week_day, bus.stops.where(:direction => true).size * 50, true)  
@@ -42,14 +44,12 @@ class Bus < ActiveRecord::Base
     end
     data_labels = ['latitude', 'longitude', 'catch_time']
     data_set = Ai4r::Data::DataSet.new(:data_items => saps_array, :data_labels => data_labels)
-    puts "Calculando... con #{data_set.size} sapeadas y con k=#{k}"
+    puts "Calculando... con #{saps_array.size} sapeadas y con k=#{k}"
     clusters = Ai4r::Clusterers::KMeans.new
     clusters.build data_set, k
     #puts "Hecho"
     #puts "Creando clusters..."
     #centroids_to_add_to_bus = Centroid.limit 0
-    #Es crucial borrar los centroides anteriores antes de reemplazarlos
-    bus.centroids.clear
     clusters.centroids.each do |centroid|
       cent = Centroid.new(
         :latitude => centroid[0].to_d,

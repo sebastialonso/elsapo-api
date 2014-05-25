@@ -25,10 +25,11 @@ class SapeadasController < ApplicationController
       #Guardamos si la sapeada está dentro del radio de algun paradero
       bus = Bus.find(sapeada_params[:bus_id])
       @sapeada.useful = false
-      bus.stops.each do |stop|
+      bus.stops.where(:direction => @sapeada.direction).each do |stop|
         if Bus.geographic_distance([@sapeada.latitude, @sapeada.longitude], [stop.latitude, stop.longitude]) <= Bus::RADIUS
           puts "ZONA de PARADERO"
           @sapeada.useful = true  
+          @sapeada.stop_id = stop.id
           stop.sapeadas << @sapeada  
           break
         end
