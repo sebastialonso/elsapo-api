@@ -26,7 +26,7 @@ namespace :sapeadas do
       bus.stops.each_with_index do |stop, stop_index|
         if sap.useful.nil? or not sap.useful
           if sap.direction == stop.direction and Bus.geographic_distance([sap.latitude.to_f, sap.longitude.to_f], [stop.latitude, stop.longitude]) <= Bus::RADIUS
-            sap.update_attributes(:useful => true, :stop_id => sap.id)
+            sap.update_attributes(:useful => true, :stop_id => stop.id)
             stop.sapeadas << sap
             logger.info "Yay, sapeada #{sap.id} es util"
           end
@@ -91,6 +91,7 @@ namespace :sapeadas do
         #Generar sapeadas mas tempranas en el tiempo
         while new_time >= 23400 #06:30
           new_sap = Sapeada.new(:bus_id => sap.bus_id,
+            :stop_id => sap.stop_id,
             :latitude => sap.latitude, 
             :longitude => sap.longitude,
             :week_day => day,
@@ -109,6 +110,7 @@ namespace :sapeadas do
         new_time = sap.catch_time + kounter*delta
         while new_time <= 84600 #23:30
           new_sap = Sapeada.new(:bus_id => sap.bus_id,
+            :stop_id => sap.stop_id,
             :latitude => sap.latitude, 
             :longitude => sap.longitude,
             :week_day => day,
