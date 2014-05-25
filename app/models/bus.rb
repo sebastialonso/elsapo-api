@@ -15,16 +15,12 @@ class Bus < ActiveRecord::Base
 
   def self.build_all_clusters(bus_id, week_day)
     start = Time.now
-    if week_day == 3
-      bus = Bus.find bus_id
-      #Es crucial borrar los centroides anteriores antes de reemplazarlos
-      bus.centroids.clear
-      bus.stops.find_each do |stop|
-        Bus.build_clusters(stop, week_day, bus_id)
-        # Bus.build_clusters(bus_id,week_day, bus.stops.where(:direction => true).size * 50, true)  
-      end 
-    else
-      puts "Solo trabajo para week_day == 3"
+    bus = Bus.find bus_id
+    #Es crucial borrar los centroides anteriores antes de reemplazarlos
+    bus.centroids.clear
+    bus.stops.find_each do |stop|
+      Bus.build_clusters(stop, week_day, bus_id)
+      # Bus.build_clusters(bus_id,week_day, bus.stops.where(:direction => true).size * 50, true)  
     end
     puts "Resultado total: #{Time.now - start}"
   end
