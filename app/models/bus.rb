@@ -82,8 +82,9 @@ class Bus < ActiveRecord::Base
     centroids_time_data = centroids_time_data.find{|x| x > 0 && x > 60 }
     puts "tamano centroids_time_data despues de condiciones: #{centroids_time_data}"
     #Si no encuentras recomendaciones, te pasaste del limite y te recomiendo la que pasa mas temprano
-    if centroids_time_data.nil?
+    if centroids_time_data.nil? or centroids_time_data.blank?
       centroids_time_data = Sapeada.where(:stop_id => near_stop.id, :direction => direction, :bus_id => 1, :week_day => week_day).order("catch_time ASC").first.catch_time
+    end
     puts "#{near_stop.latitude}, #{near_stop.longitude}, #{centroids_time_data}"
     [near_stop.latitude, near_stop.longitude, centroids_time_data]
   end
