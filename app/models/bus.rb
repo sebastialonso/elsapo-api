@@ -74,10 +74,18 @@ class Bus < ActiveRecord::Base
     end
     centroids_time_data = centroids.where(:direction => direction).pluck(:catch_time)
     #se mapea la resta a todas las filas
+    puts "catch_time"
+    puts catch_time.to_i
     centroids_time_data = centroids_time_data.map {|z| z[1] - catch_time.to_i }
     #Donde la diferencia de tiempo sea mayor que 0 (no haya pasado aun) y sea mas grande de un minuto
+    puts "tamano centroids_time_data despues de resta: #{centroids_time_data}"
     centroids_time_data = centroids_time_data.find{|x| x > 0 && x > 60 }
-    [stop.latitude, stop.longitude, centroids_time_data]
+    puts "tamano centroids_time_data despues de condiciones: #{centroids_time_data}"
+    #Si no encuentras recomendaciones, te pasaste del limite y te recomiendo la que pasa mas temprano
+    if centroids_time_data.nil?
+      centroids_time_data = Sapeada.where(:stop_id => near_stop.id, :direction => direction, :bus_id => 1, :week_day => week_day).order("catch_time ASC").first.catch_time
+    puts "#{near_stop.latitude}, #{near_stop.longitude}, #{centroids_time_data}"
+    [near_stop.latitude, near_stop.longitude, centroids_time_data]
   end
 
   def self.geographic_distance(point_1, point_2)
