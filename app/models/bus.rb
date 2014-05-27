@@ -74,7 +74,7 @@ class Bus < ActiveRecord::Base
     end
     centroids_time_data = centroids.where(:direction => direction).pluck(:catch_time)
     #se mapea la resta a todas las filas
-    centroids_time_data = centroids_time_data.map {|z| z[1] - catch_time }
+    centroids_time_data = centroids_time_data.map {|z| z[1] - catch_time.to_i }
     #Donde la diferencia de tiempo sea mayor que 0 (no haya pasado aun) y sea mas grande de un minuto
     centroids_time_data = centroids_time_data.find{|x| x > 0 && x > 60 }
     [stop.latitude, stop.longitude, centroids_time_data]
