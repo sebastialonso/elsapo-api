@@ -66,8 +66,10 @@ class Bus < ActiveRecord::Base
     max = BigDecimal::INFINITY
     sel_index = 0
     centroids.where(:direction => direction).each_with_index do |cluster, index|
-      if Bus.distance([cluster.latitude, cluster.longitude, cluster.catch_time], [lat,long, catch_time.to_i]) < max
+      candidate = Bus.distance([cluster.latitude, cluster.longitude, cluster.catch_time], [lat,long, catch_time.to_i])
+      if candidate < max
         sel_index = index
+        max = candidate
       end
     end
     centroids[sel_index]
