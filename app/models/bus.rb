@@ -66,7 +66,7 @@ class Bus < ActiveRecord::Base
     max = BigDecimal::INFINITY
     near_stop = nil
     stops.where(:direction => direction).each_with_index do |stop, index|
-      candidate = Bus.distance([stop.latitude, stop.longitude], [lat,long])
+      candidate = Bus.geographic_distance([stop.latitude, stop.longitude], [lat,long])
       if candidate < max
         near_stop = stop
         max = candidate
