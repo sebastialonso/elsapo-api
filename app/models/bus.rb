@@ -64,15 +64,20 @@ class Bus < ActiveRecord::Base
   def find_best_clusters(lat,long, catch_time, direction, week_day)
     #max = Float::INFINITY
     max = BigDecimal::INFINITY
-    sel_index = 0
-    centroids.where(:direction => direction).each_with_index do |cluster, index|
-      candidate = Bus.distance([cluster.latitude, cluster.longitude, cluster.catch_time], [lat,long, catch_time.to_i])
+    near_stop = nil
+    stops.where(:direction => direction).each_with_index do |stop, index|
+      candidate = Bus.distance([stop.latitude, stop.longitude], [lat,long])
       if candidate < max
-        sel_index = index
+        near_stop = stop
         max = candidate
       end
     end
-    centroids[sel_index]
+    centroids_time_data = centroids.where(:direction => direction).pluck(:catch_time)
+    #se mapea la resta a todas las filas
+    centroids_time_data = centroids_time_data.map {|z| z[1] - catch_time }
+    #Donde la diferencia de tiempo sea mayor que 0 (no haya pasado aun) y sea mas grande de un minuto
+    centroids_time_data = centroids_time_data.find{|x| x > 0 && x > 60 }
+    [stop.latitude, stop.longitude, centroids_time_data]
   end
 
   def self.geographic_distance(point_1, point_2)
@@ -80,6 +85,6 @@ class Bus < ActiveRecord::Base
   end
 
   def self.distance(cluster, data)
-    (cluster[0] - data[0].to_i)**2 + (cluster[1] - data[1].to_i)**2 + (cluster[2] - data[2].to_i)**2
+    (cluster[0] - data[0].to_d)**2 + (cluster[1] - data[1].to_d)**2 + (cluster[2] - data[2].to_i)**2
   end
 end

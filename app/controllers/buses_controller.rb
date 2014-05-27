@@ -23,7 +23,8 @@ class BusesController < ApplicationController
   def predict
     bus = Bus.find(1)
     @predict = bus.find_best_clusters(params[:latitude], params[:longitude], params[:catch_time], params[:direction], params[:week_day])
-    bus.centroids.first
+    puts "prediction:"
+    puts @predict
   end
 
   def last
