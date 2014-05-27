@@ -81,7 +81,7 @@ class Bus < ActiveRecord::Base
   end
 
   def self.geographic_distance(point_1, point_2)
-    (point_1[0] - point_2[0])**2 + (point_1[1] - point_2[1])**2 
+    (point_1[0] - point_2[0].to_d)**2 + (point_1[1] - point_2[1].to_d)**2 
   end
 
   def self.distance(cluster, data)
