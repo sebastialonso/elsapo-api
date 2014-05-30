@@ -29,7 +29,7 @@ class Bus < ActiveRecord::Base
     bus = Bus.find(bus_id)
     sapeadas = Sapeada.where(:bus_id => bus_id, :week_day => week_day, :useful => true, :direction => stop_to_predict.direction, :stop_id => stop_to_predict.id)
     k = 50
-    saps_array = [sapeadas.pluck(:catch_time)]
+    saps_array = sapeadas.pluck(:catch_time)
     # sapeadas.each do |sap|
     #   new_data = []
     #   # new_data.append sap.latitude
@@ -39,7 +39,7 @@ class Bus < ActiveRecord::Base
     # end
     #data_labels = ['latitude', 'longitude', 'catch_time']
     # data_labels = ['catch_time']
-    data_set = Ai4r::Data::DataSet.new(:data_items => saps_array, :data_labels => data_labels)
+    data_set = Ai4r::Data::DataSet.new(:data_items => saps_array)
     puts "Calculando... con #{saps_array.size} sapeadas y con k=#{k}"
     clusters = Ai4r::Clusterers::KMeans.new
     clusters.build data_set, k
