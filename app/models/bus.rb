@@ -20,7 +20,6 @@ class Bus < ActiveRecord::Base
     bus.centroids.clear
     bus.stops.find_each do |stop|
       Bus.build_clusters(stop, week_day, bus_id)
-      # Bus.build_clusters(bus_id,week_day, bus.stops.where(:direction => true).size * 50, true)  
     end
     puts "Resultado total: #{Time.now - start}"
   end
@@ -30,15 +29,16 @@ class Bus < ActiveRecord::Base
     bus = Bus.find(bus_id)
     sapeadas = Sapeada.where(:bus_id => bus_id, :week_day => week_day, :useful => true, :direction => stop_to_predict.direction, :stop_id => stop_to_predict.id)
     k = 50
-    saps_array = []
-    sapeadas.each do |sap|
-      new_data = []
-      new_data.append sap.latitude
-      new_data.append sap.longitude
-      new_data.append sap.catch_time
-      saps_array.append new_data
-    end
-    data_labels = ['latitude', 'longitude', 'catch_time']
+    saps_array = sapeadas.pluck(:catch_time)
+    # sapeadas.each do |sap|
+    #   new_data = []
+    #   # new_data.append sap.latitude
+    #   # new_data.append sap.longitude
+    #   new_data.append sap.catch_time
+    #   saps_array.append new_data
+    # end
+    #data_labels = ['latitude', 'longitude', 'catch_time']
+    data_labels = ['catch_time']
     data_set = Ai4r::Data::DataSet.new(:data_items => saps_array, :data_labels => data_labels)
     puts "Calculando... con #{saps_array.size} sapeadas y con k=#{k}"
     clusters = Ai4r::Clusterers::KMeans.new
@@ -48,8 +48,8 @@ class Bus < ActiveRecord::Base
     #centroids_to_add_to_bus = Centroid.limit 0
     clusters.centroids.each do |centroid|
       cent = Centroid.new(
-        :latitude => centroid[0].to_d,
-        :longitude => centroid[1].to_d,
+        :latitude => stop_to_predict.latitude,
+        :longitude => stop_to_predict.longitude,
         :catch_time => centroid[2],
         :direction => stop_to_predict.direction,
         :bus_id => bus.id
@@ -74,18 +74,14 @@ class Bus < ActiveRecord::Base
     end
     centroids_time_data = centroids.where(:direction => direction).pluck(:catch_time)
     #se mapea la resta a todas las filas
-    puts "catch_time"
     puts catch_time.to_i
     centroids_time_data = centroids_time_data.map {|z| z[1] - catch_time.to_i }
     #Donde la diferencia de tiempo sea mayor que 0 (no haya pasado aun) y sea mas grande de un minuto
-    puts "tamano centroids_time_data despues de resta: #{centroids_time_data}"
     centroids_time_data = centroids_time_data.find{|x| x > 0 && x > 60 }
-    puts "tamano centroids_time_data despues de condiciones: #{centroids_time_data}"
     #Si no encuentras recomendaciones, te pasaste del limite y te recomiendo la que pasa mas temprano
     if centroids_time_data.nil? or centroids_time_data.blank?
       centroids_time_data = Sapeada.where(:stop_id => near_stop.id, :direction => direction, :bus_id => 1, :week_day => week_day).order("catch_time ASC").first.catch_time
     end
-    puts "#{near_stop.latitude}, #{near_stop.longitude}, #{centroids_time_data}"
     [near_stop.latitude, near_stop.longitude, centroids_time_data]
   end
 
