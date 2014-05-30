@@ -29,7 +29,7 @@ class Bus < ActiveRecord::Base
     bus = Bus.find(bus_id)
     sapeadas = Sapeada.where(:bus_id => bus_id, :week_day => week_day, :useful => true, :direction => stop_to_predict.direction, :stop_id => stop_to_predict.id)
     k = 50
-    saps_array = sapeadas.pluck(:catch_time)
+    saps_array = [sapeadas.pluck(:catch_time)]
     # sapeadas.each do |sap|
     #   new_data = []
     #   # new_data.append sap.latitude
