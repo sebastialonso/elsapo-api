@@ -38,7 +38,7 @@ class Bus < ActiveRecord::Base
     #   saps_array.append new_data
     # end
     #data_labels = ['latitude', 'longitude', 'catch_time']
-    data_labels = ['catch_time']
+    # data_labels = ['catch_time']
     data_set = Ai4r::Data::DataSet.new(:data_items => saps_array, :data_labels => data_labels)
     puts "Calculando... con #{saps_array.size} sapeadas y con k=#{k}"
     clusters = Ai4r::Clusterers::KMeans.new
