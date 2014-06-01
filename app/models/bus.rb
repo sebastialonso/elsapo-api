@@ -30,10 +30,10 @@ class Bus < ActiveRecord::Base
     sapeadas = Sapeada.where(:bus_id => bus_id, :week_day => week_day, :useful => true, :direction => stop_to_predict.direction, :stop_id => stop_to_predict.id).pluck(:catch_time)
     k = 50
     saps_array = []
-    sapeadas.each do |sap|
+    sapeadas.each do |time|
       # new_data = []
       # new_data.append sap.catch_time
-      saps_array.append [sap.catch_time]
+      saps_array.append [time]
     end
     data_labels = ['catch_time']
     data_set = Ai4r::Data::DataSet.new(:data_items => [saps_array])
