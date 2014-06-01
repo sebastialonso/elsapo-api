@@ -59,6 +59,7 @@ class Bus < ActiveRecord::Base
 
   #Modify this to work for every day, every direction
   def find_best_clusters(lat,long, catch_time, direction, week_day)
+    temporal_delta = 600
     #max = Float::INFINITY
     max = BigDecimal::INFINITY
     near_stop = nil
@@ -73,19 +74,19 @@ class Bus < ActiveRecord::Base
     end
 
     #Analisis temporal
-    time_data = centroids.where(:direction => direction).where("catch_time > ?", catch_time.to_i).pluck(:catch_time)
-    
+    time_data = centroids.where(:direction => direction).where("catch_time > ? AND catch_time < ?", catch_time.to_i - temporal_delta, catch_time.to_i + temporal_delta).pluck(:catch_time)
+    average = time_data.inject(0.0) { |sum, el| sum + el } / time_data.size
     #se mapea la resta a todas las filas
-    time_data = time_data.map {|z| z - catch_time.to_i }
+    #time_data = time_data.map {|z| z - catch_time.to_i }
 
     #Donde la diferencia de tiempo sea mayor que 0 (no haya pasado aun) y sea mas grande de un minuto
-    time_data = time_data.sort.find{|x| x > 0 && x > 60 }
+    #time_data = time_data.sort.find{|x| x > 0 && x > 60 }
 
     #Si no encuentras recomendaciones, te pasaste del limite y te recomiendo la que pasa mas temprano
-    if time_data.nil? or time_data.blank?
-      time_data = Sapeada.where(:stop_id => near_stop.id, :direction => direction, :bus_id => 1, :week_day => week_day).order("catch_time ASC").first.catch_time
+    if average.nil? or average.blank?
+      average = Sapeada.where(:stop_id => near_stop.id, :direction => direction, :bus_id => 1, :week_day => week_day).order("catch_time ASC").first.catch_time
     end
-    [near_stop.latitude, near_stop.longitude, time_data]
+    [near_stop.latitude, near_stop.longitude, average]
   end
 
   def self.geographic_distance(point_1, point_2)
