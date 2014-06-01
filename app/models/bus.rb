@@ -33,10 +33,10 @@ class Bus < ActiveRecord::Base
     sapeadas.each do |time|
       # new_data = []
       # new_data.append sap.catch_time
-      saps_array.append [time]
+      saps_array.append [timex]
     end
     data_labels = ['catch_time']
-    data_set = Ai4r::Data::DataSet.new(:data_items => [saps_array])
+    data_set = Ai4r::Data::DataSet.new(:data_items => saps_array, :data_labels => data_labels)
     puts "Calculando... con #{saps_array.size} sapeadas y con k=#{k}"
     clusters = Ai4r::Clusterers::KMeans.new
     clusters.build data_set, k
@@ -47,7 +47,7 @@ class Bus < ActiveRecord::Base
       cent = Centroid.new(
         :latitude => stop_to_predict.latitude,
         :longitude => stop_to_predict.longitude,
-        :catch_time => centroid[2],
+        :catch_time => centroid[0],
         :direction => stop_to_predict.direction,
         :bus_id => bus.id
         )
@@ -62,6 +62,8 @@ class Bus < ActiveRecord::Base
     #max = Float::INFINITY
     max = BigDecimal::INFINITY
     near_stop = nil
+
+    #Analisis geografico
     stops.where(:direction => direction).each_with_index do |stop, index|
       candidate = Bus.geographic_distance([stop.latitude, stop.longitude], [lat,long])
       if candidate < max
@@ -69,17 +71,21 @@ class Bus < ActiveRecord::Base
         max = candidate
       end
     end
-    centroids_time_data = centroids.where(:direction => direction).pluck(:catch_time)
+
+    #Analisis temporal
+    time_data = centroids.where(:direction => direction).where("catch_time > ?", catch_time.to_i).pluck(:catch_time)
+    
     #se mapea la resta a todas las filas
-    puts catch_time.to_i
-    centroids_time_data = centroids_time_data.map {|z| z[1] - catch_time.to_i }
+    time_data = time_data.map {|z| z - catch_time.to_i }
+
     #Donde la diferencia de tiempo sea mayor que 0 (no haya pasado aun) y sea mas grande de un minuto
-    centroids_time_data = centroids_time_data.find{|x| x > 0 && x > 60 }
+    time_data = time_data.sort.find{|x| x > 0 && x > 60 }
+
     #Si no encuentras recomendaciones, te pasaste del limite y te recomiendo la que pasa mas temprano
-    if centroids_time_data.nil? or centroids_time_data.blank?
-      centroids_time_data = Sapeada.where(:stop_id => near_stop.id, :direction => direction, :bus_id => 1, :week_day => week_day).order("catch_time ASC").first.catch_time
+    if time_data.nil? or time_data.blank?
+      time_data = Sapeada.where(:stop_id => near_stop.id, :direction => direction, :bus_id => 1, :week_day => week_day).order("catch_time ASC").first.catch_time
     end
-    [near_stop.latitude, near_stop.longitude, centroids_time_data]
+    [near_stop.latitude, near_stop.longitude, time_data]
   end
 
   def self.geographic_distance(point_1, point_2)
