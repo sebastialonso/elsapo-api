@@ -27,18 +27,15 @@ class Bus < ActiveRecord::Base
   def self.build_clusters(stop_to_predict, week_day, bus_id)
     start = Time.now
     bus = Bus.find(bus_id)
-    sapeadas = Sapeada.where(:bus_id => bus_id, :week_day => week_day, :useful => true, :direction => stop_to_predict.direction, :stop_id => stop_to_predict.id)
+    sapeadas = Sapeada.where(:bus_id => bus_id, :week_day => week_day, :useful => true, :direction => stop_to_predict.direction, :stop_id => stop_to_predict.id).pluck(:catch_time)
     k = 50
-    saps_array = sapeadas.pluck(:catch_time)
-    # sapeadas.each do |sap|
-    #   new_data = []
-    #   # new_data.append sap.latitude
-    #   # new_data.append sap.longitude
-    #   new_data.append sap.catch_time
-    #   saps_array.append new_data
-    # end
-    #data_labels = ['latitude', 'longitude', 'catch_time']
-    # data_labels = ['catch_time']
+    saps_array = []
+    sapeadas.each do |sap|
+      # new_data = []
+      # new_data.append sap.catch_time
+      saps_array.append [sap.catch_time]
+    end
+    data_labels = ['catch_time']
     data_set = Ai4r::Data::DataSet.new(:data_items => [saps_array])
     puts "Calculando... con #{saps_array.size} sapeadas y con k=#{k}"
     clusters = Ai4r::Clusterers::KMeans.new
