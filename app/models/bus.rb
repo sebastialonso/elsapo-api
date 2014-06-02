@@ -16,9 +16,10 @@ class Bus < ActiveRecord::Base
   def self.build_all_clusters(bus_id, week_day)
     start = Time.now
     bus = Bus.find bus_id
-    #Es crucial borrar los centroides anteriores antes de reemplazarlos
-    bus.centroids.clear
+    #bus.centroids.clear
     bus.stops.find_each do |stop|
+      #Es crucial borrar los centroides anteriores antes de reemplazarlos
+      stop.centroids.clear
       Bus.build_clusters(stop, week_day, bus_id)
     end
     puts "Resultado total: #{Time.now - start}"
@@ -33,7 +34,7 @@ class Bus < ActiveRecord::Base
     sapeadas.each do |time|
       # new_data = []
       # new_data.append sap.catch_time
-      saps_array.append [timex]
+      saps_array.append [time]
     end
     data_labels = ['catch_time']
     data_set = Ai4r::Data::DataSet.new(:data_items => saps_array, :data_labels => data_labels)
@@ -78,9 +79,10 @@ class Bus < ActiveRecord::Base
     best_guess = nil
     near_stop.centroids.where(:direction => direction).each do |centroid|
       candidate = Bus.temporal_distance(centroid.catch_time, catch_time.to_i)
-      if candidate < max_time
+      if candidate < max_time and centroid.catch_time > catch_time
         best_guess = centroid
         max_time = candidate 
+      end
     end
     #se mapea la resta a todas las filas
     #time_data = time_data.map {|z| z - catch_time.to_i }
@@ -92,7 +94,7 @@ class Bus < ActiveRecord::Base
     if best_guess.nil? or best_guess.blank?
       best_guess = Sapeada.where(:stop_id => near_stop.id, :direction => direction, :bus_id => 1, :week_day => week_day).order("catch_time ASC").first.catch_time
     end
-    [near_stop.latitude, near_stop.longitude, centroid.catch_time]
+    [near_stop.latitude, near_stop.longitude, best_guess.catch_time - catch_time]
   end
 
   def self.geographic_distance(point_1, point_2)
