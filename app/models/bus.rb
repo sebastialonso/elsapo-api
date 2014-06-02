@@ -49,11 +49,10 @@ class Bus < ActiveRecord::Base
         :longitude => stop_to_predict.longitude,
         :catch_time => centroid[0],
         :direction => stop_to_predict.direction,
-        :bus_id => bus.id,
         :stop_id => stop_to_predict.id
         )
       #centroids_to_add_to_bus.append cent
-      bus.centroids << cent
+      stop_to_predict.centroids << cent
     end
     puts "Resultado parcial para paradero #{stop_to_predict.id}:  #{Time.now - start}"
   end
@@ -100,8 +99,8 @@ class Bus < ActiveRecord::Base
     (point_1[0] - point_2[0].to_d)**2 + (point_1[1] - point_2[1].to_d)**2 
   end
 
-  def self.temporal_distance(A,B)
-    (A - B)**2
+  def self.temporal_distance(point_1,point_2)
+    (point_1 - point_2)**2
   end
 
   def self.distance(cluster, data)
