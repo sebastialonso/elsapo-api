@@ -49,7 +49,8 @@ class Bus < ActiveRecord::Base
         :longitude => stop_to_predict.longitude,
         :catch_time => centroid[0],
         :direction => stop_to_predict.direction,
-        :bus_id => bus.id
+        :bus_id => bus.id,
+        :stop_id => stop_to_predict.id
         )
       #centroids_to_add_to_bus.append cent
       bus.centroids << cent
@@ -73,9 +74,15 @@ class Bus < ActiveRecord::Base
       end
     end
 
-    #Analisis temporal
-    time_data = centroids.where(:direction => direction).where("catch_time > ? AND catch_time < ?", catch_time.to_i - temporal_delta, catch_time.to_i + temporal_delta).pluck(:catch_time)
-    average = time_data.inject(0.0) { |sum, el| sum + el } / time_data.size
+    #Analisis temporal, para el paradero seleccionado
+    max_time = Float::INFINITY
+    best_guess = nil
+    near_stop.centroids.where(:direction => direction).each do |centroid|
+      candidate = Bus.temporal_distance(centroid.catch_time, catch_time.to_i)
+      if candidate < max_time
+        best_guess = centroid
+        max_time = candidate 
+    end
     #se mapea la resta a todas las filas
     #time_data = time_data.map {|z| z - catch_time.to_i }
 
@@ -83,14 +90,18 @@ class Bus < ActiveRecord::Base
     #time_data = time_data.sort.find{|x| x > 0 && x > 60 }
 
     #Si no encuentras recomendaciones, te pasaste del limite y te recomiendo la que pasa mas temprano
-    if average.nil? or average.blank?
-      average = Sapeada.where(:stop_id => near_stop.id, :direction => direction, :bus_id => 1, :week_day => week_day).order("catch_time ASC").first.catch_time
+    if best_guess.nil? or best_guess.blank?
+      best_guess = Sapeada.where(:stop_id => near_stop.id, :direction => direction, :bus_id => 1, :week_day => week_day).order("catch_time ASC").first.catch_time
     end
-    [near_stop.latitude, near_stop.longitude, average]
+    [near_stop.latitude, near_stop.longitude, centroid.catch_time]
   end
 
   def self.geographic_distance(point_1, point_2)
     (point_1[0] - point_2[0].to_d)**2 + (point_1[1] - point_2[1].to_d)**2 
+  end
+
+  def self.temporal_distance(A,B)
+    (A - B)**2
   end
 
   def self.distance(cluster, data)
