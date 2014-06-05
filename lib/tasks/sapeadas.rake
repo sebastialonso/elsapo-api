@@ -19,10 +19,10 @@ namespace :sapeadas do
   task :calculate_usefulness => :environment do
     logger = Logger.new "sapeada_usefulness.log"
     logger.info Time.now.in_time_zone
-    bus = Bus.includes(:sapeadas).find 1
-    saps = bus.sapeadas
+    bus = Bus.find 1
+    #saps = bus.sapeadas
     #Si para algun paradero, la sapeada se encuentra en su radio, entonces nos sirve
-    saps.find_each do |sap|
+    Sapeada.where(:bus_id => bus.id).find_each do |sap|
       bus.stops.each do |stop|
         if sap.useful.nil? or not sap.useful
           if sap.direction == stop.direction and Bus.geographic_distance([sap.latitude.to_f, sap.longitude.to_f], [stop.latitude, stop.longitude]) <= Bus::RADIUS
@@ -38,9 +38,8 @@ namespace :sapeadas do
   desc "Copia las sapeadas de un día a otro dia"
   task :multiplicar_en_dias => :environment do
     days = [0,1,2,4,5,6]
-    sapeadas = Sapeada.where(:bus_id => 1, :week_day => 3)
     days.each do |week_day|
-      sapeadas.each do |sap|
+      Sapeada.where(:bus_id => 1, :week_day => 3).find_each do |sap|
         new_sap = Sapeada.new
         new_sap.bus_id = sap.bus_id
         new_sap.stop_id = sap.stop_id

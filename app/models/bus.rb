@@ -92,7 +92,7 @@ class Bus < ActiveRecord::Base
 
     #Si no encuentras recomendaciones, te pasaste del limite y te recomiendo la que pasa mas temprano
     if best_guess.nil? or best_guess.blank?
-      best_guess = Sapeada.where(:stop_id => near_stop.id, :direction => direction, :bus_id => 1, :week_day => week_day).order("catch_time ASC").first.catch_time
+      best_guess = Sapeada.where(:stop_id => near_stop.id, :direction => direction, :bus_id => 1, :week_day => week_day).order("catch_time ASC").first
     end
     [near_stop.latitude, near_stop.longitude, best_guess.catch_time - catch_time.to_i]
   end
