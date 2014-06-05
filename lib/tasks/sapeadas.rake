@@ -22,8 +22,8 @@ namespace :sapeadas do
     bus = Bus.includes(:sapeadas).find 1
     saps = bus.sapeadas
     #Si para algun paradero, la sapeada se encuentra en su radio, entonces nos sirve
-    saps.each_with_index do |sap, sap_index|
-      bus.stops.each_with_index do |stop, stop_index|
+    saps.find_each do |sap|
+      bus.stops.each do |stop|
         if sap.useful.nil? or not sap.useful
           if sap.direction == stop.direction and Bus.geographic_distance([sap.latitude.to_f, sap.longitude.to_f], [stop.latitude, stop.longitude]) <= Bus::RADIUS
             sap.update_attributes(:useful => true, :stop_id => stop.id)

@@ -79,7 +79,7 @@ class Bus < ActiveRecord::Base
     best_guess = nil
     near_stop.centroids.where(:direction => direction).each do |centroid|
       candidate = Bus.temporal_distance(centroid.catch_time, catch_time.to_i)
-      if candidate < max_time and centroid.catch_time > catch_time
+      if candidate < max_time and centroid.catch_time > catch_time.to_i
         best_guess = centroid
         max_time = candidate 
       end
@@ -94,7 +94,7 @@ class Bus < ActiveRecord::Base
     if best_guess.nil? or best_guess.blank?
       best_guess = Sapeada.where(:stop_id => near_stop.id, :direction => direction, :bus_id => 1, :week_day => week_day).order("catch_time ASC").first.catch_time
     end
-    [near_stop.latitude, near_stop.longitude, best_guess.catch_time - catch_time]
+    [near_stop.latitude, near_stop.longitude, best_guess.catch_time - catch_time.to_i]
   end
 
   def self.geographic_distance(point_1, point_2)
