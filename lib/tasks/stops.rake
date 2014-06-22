@@ -13,10 +13,10 @@ namespace :stops do
   desc "Tomas las sapeadas originales y las copia para cada dia"
   task :multiply_by_day => :environment do
     stops = Bus.find(1).stops
-    days = [0,1,2,3,4,5,6]
+    days = [0,1,2,4,5,6]
     stops.each do |stop|
       days.each do |day|
-        stop.sapeadas.where(:seed => false, :timeseed => false, :useful => true).find_each do |sap|
+        stop.sapeadas.where(:seed => false, :timeseed => false, :useful => true, :week_day => 3).find_each do |sap|
           new_sap = Sapeada.new(
             :stop_id => sap.stop_id,
             :bus_id => sap.bus_id,
