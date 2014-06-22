@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140601235523) do
+ActiveRecord::Schema.define(version: 20140618172834) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -39,11 +39,11 @@ ActiveRecord::Schema.define(version: 20140601235523) do
   end
 
   create_table "sapeadas", force: true do |t|
-    t.integer  "bus_id",                              null: false
-    t.decimal  "latitude",   precision: 10, scale: 8, null: false
-    t.decimal  "longitude",  precision: 10, scale: 8, null: false
-    t.integer  "week_day",                            null: false
-    t.integer  "catch_time",                          null: false
+    t.integer  "bus_id",                                              null: false
+    t.decimal  "latitude",   precision: 10, scale: 8,                 null: false
+    t.decimal  "longitude",  precision: 10, scale: 8,                 null: false
+    t.integer  "week_day",                                            null: false
+    t.integer  "catch_time",                                          null: false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "direction"
@@ -51,14 +51,15 @@ ActiveRecord::Schema.define(version: 20140601235523) do
     t.boolean  "seed"
     t.boolean  "timeseed"
     t.integer  "stop_id"
+    t.boolean  "multiplied",                          default: false
   end
 
   create_table "stops", force: true do |t|
+    t.decimal  "latitude",   precision: 10, scale: 8
+    t.decimal  "longitude",  precision: 10, scale: 8
     t.boolean  "direction"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.decimal  "longitude",  precision: 10, scale: 8
-    t.decimal  "latitude",   precision: 10, scale: 8
   end
 
 end

@@ -59,73 +59,21 @@ namespace :sapeadas do
   require 'csv'
   desc "Copia sapeadas desde archivo CSV"
   task :from_csv => :environment do
-    filename = Rails.root.join("sapeadas.csv")
+    filename = "/home/seba/sapo/backup_sapeadas_original.csv"
     CSV.foreach(filename) do |row|
+      #Sin utilidad, debe ser calculada
       sap = Sapeada.new(
-        :bus_id => 1,
-        :latitude => row[2].to_d,
-        :longitude => row[3].to_d,
-        :week_day => 3,
+        :bus_id => row[1],
+        :latitude => row[2],
+        :longitude => row[3],
+        :week_day => row[4],
         :catch_time => row[5],
-        :direction => row[8]
-        )
+        :direction => row[8],
+        :useful => false,
+        :seed => row[10],
+        :timeseed => row[11])
       sap.save
     end
     puts "Sapeadas importadas desde #{filename}"
-  end
-
-  desc "Multiplicar cada 20 minutos cada sapeada (como si fuera otra micro"
-  task :new_useful_every_20_minutes => :environment do
-    logger = Logger.new "sapeada_new_useful.log"
-    start_time = Time.now
-    delta = 20*60 #20 minutos en segundos
-    days = [0,1,2,3,4,5,6]
-    days.each do |day|
-      logger.info "Comenzando con dia #{day}"
-      saps = Sapeada.where(:useful => true, :week_day => day)
-      saps.each do |sap|
-        count = 0
-        kounter = 1
-        new_time = sap.catch_time - kounter*delta
-        #Generar sapeadas mas tempranas en el tiempo
-        while new_time >= 23400 #06:30
-          new_sap = Sapeada.new(:bus_id => sap.bus_id,
-            :stop_id => sap.stop_id,
-            :latitude => sap.latitude, 
-            :longitude => sap.longitude,
-            :week_day => day,
-            :catch_time => new_time,
-            :direction => sap.direction,
-            :useful => true,
-            :seed => true,
-            :timeseed => true)
-          new_sap.save
-          count += 1
-          kounter += 1
-          new_time = sap.catch_time - kounter*delta
-        end
-        #Generar sapeadas mas tardias en el tiempo
-        kounter = 1
-        new_time = sap.catch_time + kounter*delta
-        while new_time <= 84600 #23:30
-          new_sap = Sapeada.new(:bus_id => sap.bus_id,
-            :stop_id => sap.stop_id,
-            :latitude => sap.latitude, 
-            :longitude => sap.longitude,
-            :week_day => day,
-            :catch_time => new_time,
-            :direction => sap.direction,
-            :useful => true,
-            :seed => true,
-            :timeseed => true)
-          new_sap.save
-          count += 1
-          kounter += 1
-          new_time = sap.catch_time + kounter*delta
-        end
-        logger.info "La sapeada #{sap.id} genero #{count} sapeadas timeseed para dia #{day}"
-      end
-      puts "Seed time sapeadas generadas para #{saps.size} sapeadas de week_day = #{day} en #{(Time.now - start_time)} segundos."
-    end
   end
 end
