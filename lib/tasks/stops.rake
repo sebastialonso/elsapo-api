@@ -47,7 +47,7 @@ namespace :stops do
     stops.find_each do |stop|
       logger.info "Parada #{stop.id}"
       #multiplicar cada sapeada que no haya sido multiplicada, y que sea una sapeada original
-      stop.sapeadas.where(:seed => false, :timeseed => false, :multiplied => false, :useful => true).find_each do |sap|
+      stop.sapeadas.where(:timeseed => false, :multiplied => false, :useful => true).find_each do |sap|
         new_time = sap.catch_time - kounter*delta
         logger.info "Copiado hacia el pasado...."
         while new_time >= 23400 #06:30
