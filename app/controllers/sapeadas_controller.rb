@@ -46,7 +46,7 @@ class SapeadasController < ApplicationController
 
   def useful
     bus = Bus.find(params[:bus_id])
-    @sapeadas = Sapeada.where(:seed =>false, :timeseed => false)
+    @sapeadas = Sapeada.where(:seed =>false, :timeseed => false, :useful => true)
   end
 
   def useful_per_day
