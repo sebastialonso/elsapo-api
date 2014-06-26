@@ -29,7 +29,7 @@ namespace :stops do
             :seed => true,
             :timeseed => false,
             :multiplied => sap.multiplied)
-          new_sap.save
+          stop.sapeadas << new_sap
         end
       end
     end
@@ -102,7 +102,7 @@ namespace :stops do
     delta = 20*60
     kounter = 1
     days = [0,1,2,3,4,5,6]
-    stop.sapeadas.where(:seed => false, :timeseed => false, :multiplied => false, :useful => true).find_each do |sap|
+    stop.sapeadas.where(:timeseed => false, :multiplied => false, :useful => true).find_each do |sap|
       days.each do |day|
         logger.info "Comenzando dia #{day}"
         new_time = sap.catch_time - kounter*delta
