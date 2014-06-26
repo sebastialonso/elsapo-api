@@ -37,23 +37,23 @@ namespace :stops do
 
   desc "Multiplica las sapeadas utiles de una parada, durante todo el dia, cada dia"
   task :multiply_all => :environment do
-    logger = Logger.new "stops_multiply.log"
-    logger.info "##############"
-    logger.info "Comenzando..."
-    logger.info "##############"
+    #logger = Logger.new "stops_multiply.log"
+    #logger.info "##############"
+    #logger.info "Comenzando..."
+    #logger.info "##############"
     stops = Bus.find(1).stops
     delta = 20*60
     stops.find_each do |stop|
-      logger.info "Parada #{stop.id}"
+      #logger.info "Parada #{stop.id}"
       #multiplicar cada sapeada que no haya sido multiplicada, y que sea una sapeada original
       stop.sapeadas.where(:timeseed => false, :multiplied => false, :useful => true).find_each do |sap|
         kounter = 1
         new_time = sap.catch_time - kounter*delta
-        logger.info "Copiado hacia el pasado...."
+        #logger.info "Copiado hacia el pasado...."
         while new_time >= 23400 #06:30
-          if new_time < 37738 and new_time > 23400
-            logger.info "Sapeada entre 06:30 am y 11:30 am"
-          end
+          #if new_time < 37738 and new_time > 23400
+          #  logger.info "Sapeada entre 06:30 am y 11:30 am"
+          #end
           new_sap = Sapeada.new(
             :stop_id => sap.stop_id,
             :bus_id => sap.bus_id,
@@ -72,7 +72,7 @@ namespace :stops do
         end
         kounter = 1
         new_time = sap.catch_time + kounter*delta
-        logger.info "Copiado hacia el futuro...."
+        #logger.info "Copiado hacia el futuro...."
         while new_time <= 86400 #23:30
           new_sap = Sapeada.new(
             :stop_id => sap.stop_id,
