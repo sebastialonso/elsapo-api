@@ -45,15 +45,13 @@ namespace :stops do
     delta = 20*60
     stops.find_each do |stop|
       #logger.info "Parada #{stop.id}"
-      #multiplicar cada sapeada que no haya sido multiplicada, y que sea una sapeada original
+      #multiplicar cada sapeada que no haya sido multiplicada aun , y util
+      #Puede ser o de las originales, o de las seed => true, que son las originales copiadas a los demas dias
       stop.sapeadas.where(:timeseed => false, :multiplied => false, :useful => true).find_each do |sap|
         kounter = 1
         new_time = sap.catch_time - kounter*delta
         #logger.info "Copiado hacia el pasado...."
-        while new_time >= 23400 #06:30
-          #if new_time < 37738 and new_time > 23400
-          #  logger.info "Sapeada entre 06:30 am y 11:30 am"
-          #end
+        while new_time >= 23400
           new_sap = Sapeada.new(
             :stop_id => sap.stop_id,
             :bus_id => sap.bus_id,

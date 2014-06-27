@@ -28,17 +28,14 @@ class Bus < ActiveRecord::Base
   def self.build_clusters(stop_to_predict, week_day, bus_id)
     start = Time.now
     bus = Bus.find(bus_id)
-    sapeadas = Sapeada.where(:bus_id => bus_id, :week_day => week_day, :useful => true, :direction => stop_to_predict.direction, :stop_id => stop_to_predict.id).pluck(:catch_time)
+    sapeadas = stop_to_predict.sapeadas.where(:bus_id => bus_id, :week_day => week_day, :useful => true, :direction => stop_to_predict.direction)
     k = 50
-    saps_array = []
-    sapeadas.each do |time|
-      # new_data = []
-      # new_data.append sap.catch_time
-      saps_array.append [time]
+    saps_times = []
+    sapeadas.pluck(:catch_time).each do |time|
+      saps_times.append [time]
     end
     data_labels = ['catch_time']
-    data_set = Ai4r::Data::DataSet.new(:data_items => saps_array, :data_labels => data_labels)
-    puts "Calculando... con #{saps_array.size} sapeadas y con k=#{k}"
+    data_set = Ai4r::Data::DataSet.new(:data_items => saps_times, :data_labels => data_labels)
     clusters = Ai4r::Clusterers::KMeans.new
     clusters.build data_set, k
     #puts "Hecho"
@@ -55,6 +52,7 @@ class Bus < ActiveRecord::Base
       #centroids_to_add_to_bus.append cent
       stop_to_predict.centroids << cent
     end
+    puts "Calculando... con #{saps_times.length} sapeadas y con k=#{k}"
     puts "Resultado parcial para paradero #{stop_to_predict.id}:  #{Time.now - start}"
   end
 
