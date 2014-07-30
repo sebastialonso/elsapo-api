@@ -28,7 +28,7 @@ class BusesController < ApplicationController
   end
 
   def last
-    @sapeada = Sapeada.where(:bus_id => params[:bus_id], :direction => params[:direction]).order("created_at DESC").first
+    @sapeada = Sapeada.where(:bus_id => params[:bus_id], :direction => params[:direction], :useful => true).order("created_at DESC").first
   end
 
   private
